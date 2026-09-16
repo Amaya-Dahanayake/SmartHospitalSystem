@@ -139,6 +139,9 @@ void registerPatient(void) {
 
     printf("\n---- New Patient Registration ----\n");
 
+    printf("Enter Patient Name: ");
+    scanf(" %[^\n]", patientNames[i]);
+
     int age;
     do {
         printf("Enter Patient Age: ");
@@ -148,9 +151,6 @@ void registerPatient(void) {
         }
     } while (age < 0 || age > 120);
     patientAge[i] = age;
-
-    printf("Enter Patient Age: ");
-    scanf("%d", &patientAge[i]);
 
     int urgency;
     do {
@@ -356,6 +356,7 @@ void printBill(int i) {
     }
     printf("====================================================\n");
 }
+
 void displaySortedPatients(void) {
     if (patientCount == 0) {
         printf("No patients registered yet.\n");
