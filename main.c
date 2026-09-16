@@ -110,7 +110,100 @@ void printWardTable(void) {
 }
 
 void registerPatient(void) {
-    printf("[Registration coming in Step 4]\n");
+    if (patientCount >= MAX_PATIENTS) {
+        printf("Patient records are full. Cannot register more.\n");
+        return;
+    }
+
+    int i = patientCount;
+
+    printf("\n---- New Patient Registration ----\n");
+
+    printf("Enter Patient Name: ");
+    scanf(" %[^\n]", patientNames[i]);
+
+    printf("Enter Patient Age: ");
+    scanf("%d", &patientAge[i]);
+
+    int urgency;
+    do {
+        printf("Enter Urgency Level (1 = Normal, 2 = Urgent, 3 = Critical): ");
+        scanf("%d", &urgency);
+        if (urgency < 1 || urgency > 3) {
+            printf("Invalid urgency level. Please enter 1, 2, or 3.\n");
+        }
+    } while (urgency < 1 || urgency > 3);
+    patientUrgency[i] = urgency;
+
+    int specID;
+    do {
+        printf("Select Specialty:\n");
+        for (int s = 0; s < NUM_SPECIALTIES; s++) {
+            printf("  %d. %s\n", s + 1, specialtyNames[s]);
+        }
+        printf("Enter Specialty ID: ");
+        scanf("%d", &specID);
+        if (specID < 1 || specID > NUM_SPECIALTIES) {
+            printf("Invalid specialty ID.\n");
+        }
+    } while (specID < 1 || specID > NUM_SPECIALTIES);
+    patientSpecialtyID[i] = specID;
+
+    int admitted;
+    do {
+        printf("Is patient admitted to a ward? (1 = Yes, 0 = No): ");
+        scanf("%d", &admitted);
+        if (admitted != 0 && admitted != 1) {
+            printf("Invalid input. Enter 1 or 0.\n");
+        }
+    } while (admitted != 0 && admitted != 1);
+    patientIsAdmitted[i] = admitted;
+
+    if (admitted == 1) {
+        int wardID;
+        do {
+            printf("Select Ward:\n");
+            for (int w = 0; w < NUM_WARDS; w++) {
+                printf("  %d. %s\n", w + 1, wardNames[w]);
+            }
+            printf("Enter Ward ID: ");
+            scanf("%d", &wardID);
+            if (wardID < 1 || wardID > NUM_WARDS) {
+                printf("Invalid ward ID.\n");
+            }
+        } while (wardID < 1 || wardID > NUM_WARDS);
+        patientWardID[i] = wardID;
+
+        printf("Enter Days Admitted: ");
+        scanf("%d", &patientDaysAdmitted[i]);
+
+        int wardIndex = wardID - 1;
+        int bedFound = -1;
+        for (int b = 0; b < wardBedCapacity[wardIndex]; b++) {
+            if (bedOccupancy[wardIndex][b] == 0) {
+                bedOccupancy[wardIndex][b] = 1;
+                bedFound = b;
+                break;
+            }
+        }
+
+        if (bedFound == -1) {
+            printf("No beds available in %s! Patient placed on waiting list (no bed assigned).\n",
+                   wardNames[wardIndex]);
+            patientBedNumber[i] = -1;
+        } else {
+            patientBedNumber[i] = bedFound;
+            printf("Assigned to %s, Bed #%02d\n", wardNames[wardIndex], bedFound + 1);
+        }
+
+    } else {
+        patientWardID[i] = 0;
+        patientDaysAdmitted[i] = 0;
+        patientBedNumber[i] = -1;
+    }
+
+    patientCount++;
+    printf("Patient registered successfully! (Patient ID: PAT-%04d)\n", 1000 + i + 1);
 }
 
 void displayAllPatients(void) {
