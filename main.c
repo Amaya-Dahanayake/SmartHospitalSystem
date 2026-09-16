@@ -43,6 +43,10 @@ int patientBedNumber[MAX_PATIENTS];
 int patientDaysAdmitted[MAX_PATIENTS];
 float patientWaitTime[MAX_PATIENTS];
 float patientFinalBill[MAX_PATIENTS];
+float calculateWaitTime(int specialtyIndex);
+float calculateSurcharge(int urgency, float baseFee);
+float calculateWardCost(int daysAdmitted, int wardIndex);
+float calculateDiscount(int age, float grossTotal);
 
 int patientCount = 0;
 void printSpecialtyTable(void);
@@ -202,10 +206,58 @@ void registerPatient(void) {
         patientBedNumber[i] = -1;
     }
 
+    int specIndex = patientSpecialtyID[i] - 1;
+    float baseFee = specialtyFees[specIndex];
+
+    patientWaitTime[i] = calculateWaitTime(specIndex);
+
+    float surcharge = calculateSurcharge(patientUrgency[i], baseFee);
+
+    float wardCost = 0.0;
+    if (patientIsAdmitted[i] == 1) {
+        int wardIndex = patientWardID[i] - 1;
+        wardCost = calculateWardCost(patientDaysAdmitted[i], wardIndex);
+    }
+
+    float grossTotal = baseFee + surcharge + wardCost;
+    float discount = calculateDiscount(patientAge[i], grossTotal);
+    float finalAmount = grossTotal - discount;
+
+    patientFinalBill[i] = finalAmount;
+
     patientCount++;
     printf("Patient registered successfully! (Patient ID: PAT-%04d)\n", 1000 + i + 1);
 }
 
 void displayAllPatients(void) {
     printf("Total patients registered: %d\n", patientCount);
+}
+
+float calculateWaitTime(int specialtyIndex) {
+    float waitTime = specialtyQueueCount[specialtyIndex] * specialtyConsultTime[specialtyIndex];
+    specialtyQueueCount[specialtyIndex]++;
+    return waitTime;
+}
+
+float calculateSurcharge(int urgency, float baseFee) {
+    if (urgency == 2) {
+        return baseFee * 0.20;
+    } else if (urgency == 3) {
+        return baseFee * 0.50;
+    }
+    return 0.0;
+}
+
+float calculateWardCost(int daysAdmitted, int wardIndex) {
+    if (daysAdmitted <= 0) {
+        return 0.0;
+    }
+    return daysAdmitted * wardDailyRate[wardIndex];
+}
+
+float calculateDiscount(int age, float grossTotal) {
+    if (age < 5 || age > 65) {
+        return grossTotal * 0.15;
+    }
+    return 0.0;
 }
