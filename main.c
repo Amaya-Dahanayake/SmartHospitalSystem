@@ -56,6 +56,7 @@ void printWardTable(void);
 void showMenu(void);
 void registerPatient(void);
 void displayAllPatients(void);
+void printBill(int i);
 
 int main(void) {
     printf("Smart Hospital Patient & Resource Allocation System\n");
@@ -226,7 +227,7 @@ void registerPatient(void) {
     patientFinalBill[i] = finalAmount;
 
     patientCount++;
-    printf("Patient registered successfully! (Patient ID: PAT-%04d)\n", 1000 + i + 1);
+    printbill(i);
 }
 
 void displayAllPatients(void) {
@@ -260,4 +261,75 @@ float calculateDiscount(int age, float grossTotal) {
         return grossTotal * 0.15;
     }
     return 0.0;
+}
+
+void printBill(int i) {
+    int specIndex = patientSpecialtyID[i] - 1;
+    float baseFee = specialtyFees[specIndex];
+    float surcharge = calculateSurcharge(patientUrgency[i], baseFee);
+
+    float surchargePercent = 0;
+    if (patientUrgency[i] == 2) surchargePercent = 20;
+    else if (patientUrgency[i] == 3) surchargePercent = 50;
+
+    float wardCost = 0.0;
+    if (patientIsAdmitted[i] == 1) {
+        int wardIndex = patientWardID[i] - 1;
+        wardCost = calculateWardCost(patientDaysAdmitted[i], wardIndex);
+    }
+
+    float grossTotal = baseFee + surcharge + wardCost;
+    float discount = calculateDiscount(patientAge[i], grossTotal);
+
+    const char *urgencyLabel;
+    if (patientUrgency[i] == 1) urgencyLabel = "Level 1 (Normal)";
+    else if (patientUrgency[i] == 2) urgencyLabel = "Level 2 (Urgent)";
+    else urgencyLabel = "Level 3 (Critical)";
+
+    printf("\n====================================================\n");
+    printf(" SMART HOSPITAL ADMISSION & BILL\n");
+    printf("----------------------------------------------------------------------------------------\n");
+    printf("Patient ID     : PAT-%04d\n", 1000 + i + 1);
+    printf("Patient Name   : %s\n", patientNames[i]);
+
+    if (patientAge[i] < 5 || patientAge[i] > 65) {
+        printf("Age            : %d Years (15%% Subsidy Eligible)\n", patientAge[i]);
+    } else {
+        printf("Age            : %d Years\n", patientAge[i]);
+    }
+
+    printf("Specialty      : %s\n", specialtyNames[specIndex]);
+
+    if (patientIsAdmitted[i] == 1 && patientBedNumber[i] != -1) {
+        int wardIndex = patientWardID[i] - 1;
+        printf("Assigned Ward  : %s (Bed #%02d)\n", wardNames[wardIndex], patientBedNumber[i] + 1);
+    } else if (patientIsAdmitted[i] == 1) {
+        printf("Assigned Ward  : Waiting list (no bed available)\n");
+    } else {
+        printf("Assigned Ward  : Outpatient (Not Admitted)\n");
+    }
+
+    printf("Urgency Level  : %s\n", urgencyLabel);
+    printf("----------------------------------------------------------------------------------------\n");
+    printf("Base Consultation Fee   : LKR %.2f\n", baseFee);
+    printf("Emergency Surcharge     : LKR %.2f (%.0f%%)\n", surcharge, surchargePercent);
+
+    if (patientIsAdmitted[i] == 1) {
+        printf("Ward Stay Cost (%d Days) : LKR %.2f\n", patientDaysAdmitted[i], wardCost);
+    } else {
+        printf("Ward Stay Cost          : LKR 0.00\n");
+    }
+
+    printf("----------------------------------------------------------------------------------------\n");
+    printf("Gross Total Bill        : LKR %.2f\n", grossTotal);
+    printf("Age Subsidy Discount    : LKR -%.2f (%.0f%%)\n", discount, (discount > 0) ? 15.0 : 0.0);
+    printf("----------------------------------------------------------------------------------------\n");
+    printf("Final Payable Amount    : LKR %.2f\n", patientFinalBill[i]);
+
+    if (patientWaitTime[i] == 0) {
+        printf("Estimated Waiting Time  : 0.00 mins (Immediate Attention)\n");
+    } else {
+        printf("Estimated Waiting Time  : %.2f mins\n", patientWaitTime[i]);
+    }
+    printf("====================================================\n");
 }
