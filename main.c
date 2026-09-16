@@ -139,8 +139,15 @@ void registerPatient(void) {
 
     printf("\n---- New Patient Registration ----\n");
 
-    printf("Enter Patient Name: ");
-    scanf(" %[^\n]", patientNames[i]);
+    int age;
+    do {
+        printf("Enter Patient Age: ");
+        scanf("%d", &age);
+        if (age < 0 || age > 120) {
+            printf("Invalid age. Please enter a realistic age.\n");
+        }
+    } while (age < 0 || age > 120);
+    patientAge[i] = age;
 
     printf("Enter Patient Age: ");
     scanf("%d", &patientAge[i]);
