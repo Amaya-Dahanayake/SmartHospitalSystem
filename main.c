@@ -31,6 +31,20 @@ int bedOccupancy[NUM_WARDS][MAX_BEDS] = {0};
 
 int specialtyQueueCount[NUM_SPECIALTIES] = {0};
 
+#define MAX_PATIENTS 100
+
+char patientNames[MAX_PATIENTS][50];
+int patientAge[MAX_PATIENTS];
+int patientUrgency[MAX_PATIENTS];
+int patientSpecialtyID[MAX_PATIENTS];
+int patientIsAdmitted[MAX_PATIENTS];
+int patientWardID[MAX_PATIENTS];
+int patientBedNumber[MAX_PATIENTS];
+int patientDaysAdmitted[MAX_PATIENTS];
+float patientWaitTime[MAX_PATIENTS];
+float patientFinalBill[MAX_PATIENTS];
+
+int patientCount = 0;
 void printSpecialtyTable(void);
 void printWardTable(void);
 
