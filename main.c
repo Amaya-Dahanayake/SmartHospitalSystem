@@ -57,6 +57,7 @@ void showMenu(void);
 void registerPatient(void);
 void displayAllPatients(void);
 void printBill(int i);
+void displaySortedPatients(void);
 
 int main(void) {
     printf("Smart Hospital Patient & Resource Allocation System\n");
@@ -73,6 +74,9 @@ int main(void) {
                 break;
             case 2:
                 displayAllPatients();
+                break;
+            case 3:
+                displaySortedPatients();
                 break;
             case 0:
                 printf("Exiting system. Goodbye!\n");
@@ -91,6 +95,7 @@ void showMenu(void) {
     printf("========== MAIN MENU ==========\n");
     printf("1. Register New Patient\n");
     printf("2. Display All Patients (test)\n");
+    printf("3. Display Patients by Priority\n");
     printf("0. Exit\n");
     printf("Enter your choice: ");
 }
@@ -332,4 +337,40 @@ void printBill(int i) {
         printf("Estimated Waiting Time  : %.2f mins\n", patientWaitTime[i]);
     }
     printf("====================================================\n");
+}
+void displaySortedPatients(void) {
+    if (patientCount == 0) {
+        printf("No patients registered yet.\n");
+        return;
+    }
+    int order[MAX_PATIENTS];
+    for (int k = 0; k < patientCount; k++) {
+        order[k] = k;
+    }
+
+    for (int a = 0; a < patientCount - 1; a++) {
+        for (int b = 0; b < patientCount - 1 - a; b++) {
+            int idx1 = order[b];
+            int idx2 = order[b + 1];
+            if (patientUrgency[idx2] > patientUrgency[idx1]) {
+                int temp = order[b];
+                order[b] = order[b + 1];
+                order[b + 1] = temp;
+            }
+        }
+    }
+
+    printf("\n========== PATIENTS BY PRIORITY ==========\n");
+    for (int k = 0; k < patientCount; k++) {
+        int i = order[k];
+        const char *urgencyLabel;
+        if (patientUrgency[i] == 1) urgencyLabel = "Normal";
+        else if (patientUrgency[i] == 2) urgencyLabel = "Urgent";
+        else urgencyLabel = "Critical";
+
+        printf("%d. PAT-%04d | %-20s | Urgency: %-8s | Specialty: %s\n",
+               k + 1, 1000 + i + 1, patientNames[i], urgencyLabel,
+               specialtyNames[patientSpecialtyID[i] - 1]);
+    }
+    printf("============================================\n");
 }
