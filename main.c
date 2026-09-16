@@ -108,3 +108,11 @@ void printWardTable(void) {
     }
     printf("\n");
 }
+
+void registerPatient(void) {
+    printf("[Registration coming in Step 4]\n");
+}
+
+void displayAllPatients(void) {
+    printf("Total patients registered: %d\n", patientCount);
+}
