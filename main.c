@@ -47,6 +47,11 @@ float patientFinalBill[MAX_PATIENTS];
 int patientCount = 0;
 void printSpecialtyTable(void);
 void printWardTable(void);
+void printSpecialtyTable(void);
+void printWardTable(void);
+void showMenu(void);
+void registerPatient(void);
+void displayAllPatients(void);
 
 int main(void) {
     printf("Smart Hospital Patient & Resource Allocation System\n");
