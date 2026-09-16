@@ -1,5 +1,5 @@
 # Smart Hospital Patient & Resource Allocation System
-~CSC 1012~
+**CSC 1012**
 
 A menu-driven C console application simulating patient intake, bed allocation,
 emergency triage sorting, and medical billing for a hospital system.
