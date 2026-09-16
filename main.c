@@ -57,8 +57,27 @@ int main(void) {
     printf("Smart Hospital Patient & Resource Allocation System\n");
     printf("System initializing...\n\n");
 
-    printSpecialtyTable();
-    printWardTable();
+    int choice;
+    do {
+        showMenu();
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                registerPatient();
+                break;
+            case 2:
+                displayAllPatients();
+                break;
+            case 0:
+                printf("Exiting system. Goodbye!\n");
+                break;
+            default:
+                printf("Invalid choice. Try again.\n");
+        }
+        printf("\n");
+
+    } while (choice != 0);
 
     return 0;
 }
