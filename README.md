@@ -1,4 +1,5 @@
 # Smart Hospital Patient & Resource Allocation System
+##CSC 1012
 
 A menu-driven C console application simulating patient intake, bed allocation,
 emergency triage sorting, and medical billing for a hospital system.
@@ -15,4 +16,5 @@ emergency triage sorting, and medical billing for a hospital system.
 C (Code::Blocks)
 
 ## Author
-Amaya Dahanayake — CSC 1012, University of Sri Jayewardenepura
+Amaya Dahanayake
+Index no.:AS20250456
