@@ -59,10 +59,14 @@ void displayAllPatients(void);
 void printBill(int i);
 void displaySortedPatients(void);
 void generateReport(void);
+void saveBedsToFile(void);
+void loadBedsFromFile(void);
+void appendPatientRecord(int i);
 
 int main(void) {
     printf("Smart Hospital Patient & Resource Allocation System\n");
     printf("System initializing...\n\n");
+    loadBedsFromFile();
 
     int choice;
     do {
@@ -83,6 +87,7 @@ int main(void) {
                 generateReport();
                 break;
             case 0:
+                saveBedsToFile();
                 printf("Exiting system. Goodbye!\n");
                 break;
             default:
@@ -238,6 +243,7 @@ void registerPatient(void) {
 
     patientCount++;
     printBill(i);
+    appendPatientRecord(i);
 }
 
 void displayAllPatients(void) {
@@ -386,7 +392,6 @@ void generateReport(void) {
         return;
     }
 
-    // ---- 1. Count patients by urgency level ----
     int normalCount = 0, urgentCount = 0, criticalCount = 0;
     for (int i = 0; i < patientCount; i++) {
         if (patientUrgency[i] == 1) normalCount++;
@@ -394,7 +399,6 @@ void generateReport(void) {
         else if (patientUrgency[i] == 3) criticalCount++;
     }
 
-    // ---- 2. Total revenue and total discounts ----
     float totalRevenue = 0.0;
     float totalDiscounts = 0.0;
     for (int i = 0; i < patientCount; i++) {
@@ -449,4 +453,52 @@ void generateReport(void) {
     printf("  Name       : %s\n", patientNames[topPayerIndex]);
     printf("  Total Bill : LKR %.2f\n", patientFinalBill[topPayerIndex]);
     printf("=======================================================\n");
+}
+
+void saveBedsToFile(void) {
+    FILE *file = fopen("beds_status.txt", "w");
+    if (file == NULL) {
+        printf("Error: could not save bed status.\n");
+        return;
+    }
+
+    for (int w = 0; w < NUM_WARDS; w++) {
+        for (int b = 0; b < wardBedCapacity[w]; b++) {
+            fprintf(file, "%d ", bedOccupancy[w][b]);
+        }
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
+    printf("Bed status saved.\n");
+}
+
+void loadBedsFromFile(void) {
+    FILE *file = fopen("beds_status.txt", "r");
+    if (file == NULL) {
+        return;
+    }
+
+    for (int w = 0; w < NUM_WARDS; w++) {
+        for (int b = 0; b < wardBedCapacity[w]; b++) {
+            fscanf(file, "%d", &bedOccupancy[w][b]);
+        }
+    }
+
+    fclose(file);
+    printf("Previous bed status loaded.\n");
+}
+
+void appendPatientRecord(int i) {
+    FILE *file = fopen("patient_records.txt", "a");
+    if (file == NULL) {
+        printf("Error: could not save patient record.\n");
+        return;
+    }
+
+    fprintf(file, "PAT-%04d | %s | Age: %d | Urgency: %d | Specialty: %s | Final Bill: LKR %.2f\n",
+            1000 + i + 1, patientNames[i], patientAge[i], patientUrgency[i],
+            specialtyNames[patientSpecialtyID[i] - 1], patientFinalBill[i]);
+
+    fclose(file);
 }
