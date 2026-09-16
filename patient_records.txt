@@ -1,0 +1,3 @@
+PAT-1001 | amaya  | Age: 20 | Urgency: 2 | Specialty: General Practice (OPD) | Final Bill: LKR 1800.00
+PAT-1002 | chamodaa | Age: 21 | Urgency: 1 | Specialty: Cardiology | Final Bill: LKR 10500.00
+PAT-1003 | tharushi | Age: 24 | Urgency: 2 | Specialty: Cardiology | Final Bill: LKR 17400.00
