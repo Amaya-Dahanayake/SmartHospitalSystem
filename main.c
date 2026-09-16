@@ -227,7 +227,7 @@ void registerPatient(void) {
     patientFinalBill[i] = finalAmount;
 
     patientCount++;
-    printbill(i);
+    printBill(i);
 }
 
 void displayAllPatients(void) {
