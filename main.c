@@ -82,6 +82,14 @@ int main(void) {
     return 0;
 }
 
+void showMenu(void) {
+    printf("========== MAIN MENU ==========\n");
+    printf("1. Register New Patient\n");
+    printf("2. Display All Patients (test)\n");
+    printf("0. Exit\n");
+    printf("Enter your choice: ");
+}
+
 void printSpecialtyTable(void) {
     printf("---- Doctor Specialties ----\n");
     for (int i = 0; i < NUM_SPECIALTIES; i++) {
